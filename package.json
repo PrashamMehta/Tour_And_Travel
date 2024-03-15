@@ -1,0 +1,14 @@
+{
+    "name": "start-all",
+    "version": "1.0.0",
+    "description": "Script to start both API and client applications",
+    "scripts": {
+      "start-api": "cd api && npm start",
+      "start-client": "cd client && npm start",
+      "start": "npm run start-api & npm run start-client",
+      "install-api": "cd api && npm install",
+      "install-client": "cd client && npm install",
+      "install": "npm run install-api & npm run install-client"
+    }
+  }
+  
