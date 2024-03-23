@@ -16,7 +16,7 @@ import useFetch from "../../hooks/useFetch.js";
 import { SearchContext } from "../../context/SearchContext.js";
 import { parseWithOptions } from "date-fns/fp";
 import { AuthContext } from "../../context/AuthContext.js";
-import Reserve from "../../components/Reserve/Reserve.jsx";
+import Reserve from "../../components/reserve/Reserve.jsx";
 
 const Hotel = () => {
   const location = useLocation();
@@ -43,7 +43,7 @@ const Hotel = () => {
     const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
     return diffDays;
   }
-
+  console.log(dates[0])
   const days = dayDifference(dates[0].endDate, dates[0].startDate)
   
 

@@ -11,7 +11,14 @@ const Reserve = ({setOpen,hotelId}) =>
             <div className="rContainer">
                 <FontAwesomeIcon icon={faCircleXmark} className="rClose" onClick={setOpen(false)}/>
                 <span>Select your rooms:</span>
-                {statusbar.map(item)}
+                {data.map(item=>(
+                <div className="rItem">
+                    <div className="rItemInfo"></div>
+                    <div className="rTitle">{item.title}</div>
+                    <div className="rDesc">{item.desc}</div>
+                    <div className="rMax">Mx People : {item.maxPeople}</div>
+                </div>
+                ))}
             </div>
         </div>
     )
