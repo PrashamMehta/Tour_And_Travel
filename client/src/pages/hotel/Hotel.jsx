@@ -10,9 +10,13 @@ import {
   faCircleXmark,
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
-import {useLocation } from "react-router-dom";
+import { useContext, useState } from "react";
+import {useLocation, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch.js";
+import { SearchContext } from "../../context/SearchContext.js";
+import { parseWithOptions } from "date-fns/fp";
+import { AuthContext } from "../../context/AuthContext.js";
+import Reserve from "../../components/Reserve/Reserve.jsx";
 
 const Hotel = () => {
   const location = useLocation();
@@ -22,7 +26,25 @@ const Hotel = () => {
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
 
-  const  { data, loading} = useFetch(`/hotels/find/${id}`)
+  const  { data, loading} = useFetch(`/hotels/find/${id}`);
+
+  const {user} = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const {dates, options} = useContext(SearchContext);
+
+  const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+  function dayDifference(date1,date2)
+  {
+    const timeDiff = Math.abs(date2.getTime()-date1.getTime());
+    const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
+    return diffDays;
+  }
+
+  const days = dayDifference(dates[0].endDate, dates[0].startDate)
   
 
 
@@ -63,6 +85,19 @@ const Hotel = () => {
 
     setSlideNumber(newSlideNumber)
   };
+
+
+  const handleClick = () =>
+  {
+    if (user)
+    {
+      setOpenModal(true);   
+    }
+    else
+    {
+      navigate("/login");
+    }
+  }
 
   return (
     <div>
@@ -126,21 +161,22 @@ const Hotel = () => {
               </p>
             </div>
             <div className="hotelDetailsPrice">
-              <h1>Perfect for a 9-night stay!</h1>
+              <h1>Perfect for a {days}-night stay!</h1>
               <span>
                 Located in the real heart of Krakow, this property has an
                 excellent location score of 9.8!
               </span>
               <h2>
-                <b>$945</b> (9 nights)
+                <b>${days * data.cheapestPrice * options.room}</b> ({days} nights)
               </h2>
-              <button>Reserve or Book Now!</button>
+              <button onClick={handleClick}>Reserve or Book Now!</button>
             </div>
           </div>
         </div>
         <MailList />
         <Footer />
       </div>)}
+      {openModal && <Reserve setOpen={setOpenModal} hotelId={id}/>}
     </div>
   );
 };
